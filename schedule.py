@@ -4,8 +4,9 @@ def MeetingFinder(schedule_1, schedule_2, minTime):
     convertedSchedule_2 = timeToMinutes(schedule_2)
 
     mergedSchedules = mergeSchedules(convertedSchedule_1, convertedSchedule_2)
-    print(mergedSchedules)
-    return calcFreeSpaces(mergedSchedules, minTime)
+    freeSpace = calcFreeSpaces(mergedSchedules, minTime)
+
+    return freeSpace
 
 
 def timeToMinutes(schedule):
@@ -65,19 +66,26 @@ def calcFreeSpaces(mergedSchedule, minTime):
     while count <= len(mergedSchedule) - 2:
         end1 = mergedSchedule[count][1]
         begin2 = mergedSchedule[count + 1][0]
-        time = begin2 - end1
-        print(time)
-        if time >= minTime:
-            freeSpaces.append([end1, begin2])
+        minutes = begin2 - end1
+        print(minutes)
+        if minutes >= minTime:
+            freeSpaces.append({
+                'from': convertMinutesToTime(end1),
+                'to': convertMinutesToTime(begin2),
+                'time': minutes
+            })
 
         count += 1
     return freeSpaces
 
 
-schedule_1 = [['8:00', '9:30'], ['10:30', '11:30'],
-              ['13:00', '13:30'], ['14:00', '15:30']]
-schedule_2 = [['8:00', '9:00'], ['10:00', '11:30'],
-              ['13:00', '14:00'], ['18:00', '20:30']]
+def convertMinutesToTime(minutes):
+
+    return '%d:%02d' % (divmod(minutes, 60))
+
+
+schedule_1 = [['8:00', '9:30'], ['11:30', '12:30']]
+schedule_2 = [['8:00', '9:00'], ['10:00', '11:30']]
 
 spaces = MeetingFinder(schedule_1, schedule_2, 30)
 print(spaces)
