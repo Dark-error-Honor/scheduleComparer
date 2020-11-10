@@ -26,33 +26,26 @@ def timeToMinutes(schedule):
 
 
 def mergeSchedules(schedule_1, schedule_2):
-    pointer1 = 0
-    pointer2 = 0
-    mergedSchedule = []
-    while pointer1 < len(schedule_1) and pointer2 < len(schedule_2):
-        begin1 = schedule_1[pointer1][0]
-        end1 = schedule_1[pointer1][1]
-        begin2 = schedule_2[pointer2][0]
-        end2 = schedule_2[pointer2][1]
+    schedule = schedule_1 + schedule_2
+    schedule.sort(key=lambda x: x[0])
+    mergedStack = []
+    start = -10000
+    end = -100000
+    for i in range(len(schedule)):
+        item = schedule[i]
+        if item[0] > end:
+            if i != 0:
+                mergedStack.append([start, end])
+            end = item[1]
+            start = item[0]
+        else:
+            if item[1] >= end:
+                end = item[1]
 
-        if begin1 <= begin2:
-            if end1 >= begin2 and end1 >= end2:
-                mergedSchedule.append([begin1, end1])
+    if end != -100000 and [start, end] not in mergedStack:
+        mergedStack.append([start, end])
 
-            elif begin2 >= begin1 and end2 >= end1:
-                mergedSchedule.append([begin1, end2])
-
-            else:
-                mergedSchedule.append(schedule_1[pointer1])
-                mergedSchedule.append(schedule_2[pointer2])
-        elif begin1 >= begin2:
-            if end1 >= end2:
-                mergedSchedule.append([begin2, end1])
-
-        pointer1 += 1
-        pointer2 += 1
-
-    return mergedSchedule
+    return mergedStack
 
 
 def calcFreeSpaces(mergedSchedule, minTime):
@@ -62,7 +55,6 @@ def calcFreeSpaces(mergedSchedule, minTime):
         end1 = mergedSchedule[count][1]
         begin2 = mergedSchedule[count + 1][0]
         minutes = begin2 - end1
-        print(minutes)
         if minutes >= minTime:
             freeSpaces.append({
                 'from': convertMinutesToTime(end1),
@@ -79,10 +71,9 @@ def convertMinutesToTime(minutes):
     return '%d:%02d' % (divmod(minutes, 60))
 
 
-schedule_1 = [['8:00', '9:30'], ['10:30', '11:30'],
-              ['13:00', '13:30'], ['15:00', '15:30']]
-schedule_2 = [['8:00', '9:00'], ['10:00', '11:30'],
-              ['13:00', '14:00'], ['18:00', '20:30']]
+schedule_1 = [['7:00', '8:00'], ['10:00', '12:00'],
+              ['13:30', '14:30'], ['18:00', '20:00']]
+schedule_2 = [['10:00', '12:00'], ['13:00', '14:00'], ['16:00', '17:00']]
 
 spaces = MeetingFinder(schedule_1, schedule_2, 30)
 print(spaces)
