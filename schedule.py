@@ -4,7 +4,6 @@ def MeetingFinder(schedule_1, schedule_2, minTime):
     convertedSchedule_2 = timeToMinutes(schedule_2)
 
     mergedSchedules = mergeSchedules(convertedSchedule_1, convertedSchedule_2)
-    print(mergedSchedules)
     freeSpace = calcFreeSpaces(mergedSchedules, minTime)
 
     return freeSpace
@@ -27,7 +26,6 @@ def timeToMinutes(schedule):
 
 
 def mergeSchedules(schedule_1, schedule_2):
-    print(f'schedule1: {schedule_1} | schedule2: {schedule_2}')
     pointer1 = 0
     pointer2 = 0
     mergedSchedule = []
@@ -39,22 +37,16 @@ def mergeSchedules(schedule_1, schedule_2):
 
         if begin1 <= begin2:
             if end1 >= begin2 and end1 >= end2:
-                print(f'{begin1} is smaller then {begin2}')
                 mergedSchedule.append([begin1, end1])
 
             elif begin2 >= begin1 and end2 >= end1:
-                print(
-                    f'{begin1} is smaller then {begin2} || {end2} is bigger then {end1}')
                 mergedSchedule.append([begin1, end2])
 
             else:
-                print(f'none of the top if statement')
                 mergedSchedule.append(schedule_1[pointer1])
                 mergedSchedule.append(schedule_2[pointer2])
         elif begin1 >= begin2:
-            print(f'begin | {begin1} is bigger then {begin2}')
             if end1 >= end2:
-                print(f'end | {end1} is bigger then {end2}')
                 mergedSchedule.append([begin2, end1])
 
         pointer1 += 1
